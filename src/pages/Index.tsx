@@ -10,7 +10,7 @@ import { ChannelChart } from "@/components/ChannelChart";
 import { WeekdayChart } from "@/components/WeekdayChart";
 import { SalesHistory } from "@/components/SalesHistory";
 import { ImportSales } from "@/components/ImportSales";
-import { MissingDayWarning } from "@/components/MissingDayWarning";
+import { getSalesForMonth, upsertSale, deleteSale } from "@/lib/salesStore";
 import { getSalesForMonth, upsertSale, deleteSale } from "@/lib/salesStore";
 
 const MARCH_2026_SEED = [
