@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { ChevronLeft, ChevronRight, Leaf } from "lucide-react";
@@ -9,18 +9,44 @@ import { RevenueChart } from "@/components/RevenueChart";
 import { ChannelChart } from "@/components/ChannelChart";
 import { WeekdayChart } from "@/components/WeekdayChart";
 import { SalesHistory } from "@/components/SalesHistory";
+import { ImportSales } from "@/components/ImportSales";
+import { MissingDayWarning } from "@/components/MissingDayWarning";
 import { getSalesForMonth, upsertSale, deleteSale } from "@/lib/salesStore";
+
+const MARCH_2026_SEED = [
+  { date: "2026-03-02", cash: 6.98, card: 559.89, ifood: 408.86 },
+  { date: "2026-03-03", cash: 0, card: 1019.73, ifood: 1117.64 },
+  { date: "2026-03-04", cash: 49.70, card: 1199.25, ifood: 275.79 },
+  { date: "2026-03-05", cash: 0, card: 636.37, ifood: 1063.03 },
+  { date: "2026-03-06", cash: 135.00, card: 923.85, ifood: 197.77 },
+  { date: "2026-03-07", cash: 0, card: 436.95, ifood: 188.03 },
+  { date: "2026-03-09", cash: 4.00, card: 1733.63, ifood: 413.75 },
+  { date: "2026-03-10", cash: 21.00, card: 1267.30, ifood: 914.47 },
+  { date: "2026-03-11", cash: 37.00, card: 968.83, ifood: 803.70 },
+  { date: "2026-03-12", cash: 0, card: 1270.37, ifood: 735.20 },
+  { date: "2026-03-13", cash: 47.00, card: 738.74, ifood: 565.13 },
+  { date: "2026-03-16", cash: 85.00, card: 1446.62, ifood: 879.59 },
+];
 
 function getDaysInMonth(year: number, month: number) {
   return new Date(year, month + 1, 0).getDate();
 }
 
 export default function Index() {
-  const now = new Date();
-  const [year, setYear] = useState(now.getFullYear());
-  const [month, setMonth] = useState(now.getMonth());
+  const [year, setYear] = useState(2026);
+  const [month, setMonth] = useState(2); // March
   const [, setTick] = useState(0);
   const refresh = useCallback(() => setTick((t) => t + 1), []);
+
+  // Seed March 2026 data on first load
+  useEffect(() => {
+    const SEED_KEY = "natbox-march2026-seeded";
+    if (!localStorage.getItem(SEED_KEY)) {
+      MARCH_2026_SEED.forEach((e) => upsertSale(e));
+      localStorage.setItem(SEED_KEY, "1");
+      refresh();
+    }
+  }, [refresh]);
 
   const sales = getSalesForMonth(year, month);
   const totalRevenue = sales.reduce((s, e) => s + e.total, 0);
@@ -28,6 +54,8 @@ export default function Index() {
   const dailyAverage = salesDays > 0 ? totalRevenue / salesDays : 0;
   const daysInMonth = getDaysInMonth(year, month);
   const projection = dailyAverage * daysInMonth;
+
+  const isMarch2026 = year === 2026 && month === 2;
 
   const prevMonth = () => {
     if (month === 0) { setYear(year - 1); setMonth(11); }
@@ -79,6 +107,9 @@ export default function Index() {
           </Button>
         </div>
 
+        {/* Warning for missing day */}
+        {isMarch2026 && <MissingDayWarning />}
+
         {/* KPIs */}
         <KPICards
           totalRevenue={totalRevenue}
@@ -94,6 +125,9 @@ export default function Index() {
           <ChannelChart sales={sales} />
           <WeekdayChart sales={sales} />
         </div>
+
+        {/* Import Section */}
+        <ImportSales onImport={refresh} />
 
         {/* History */}
         <SalesHistory sales={sales} onEdit={handleAdd} onDelete={handleDelete} />
