@@ -6,13 +6,16 @@ interface RevenueChartProps {
 }
 
 export function RevenueChart({ sales }: RevenueChartProps) {
-  const data = sales.map((s) => ({
-    date: new Date(s.date).toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" }),
-    total: s.total,
-    cash: s.cash,
-    card: s.card,
-    ifood: s.ifood,
-  }));
+  const data = sales.map((s) => {
+    const [, m, d] = s.date.split("-");
+    return {
+      date: `${d}/${m}`,
+      total: s.total,
+      cash: s.cash,
+      card: s.card,
+      ifood: s.ifood,
+    };
+  });
 
   if (data.length === 0) {
     return (
