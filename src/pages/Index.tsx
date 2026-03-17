@@ -56,7 +56,7 @@ export default function Index() {
   const daysInMonth = getDaysInMonth(year, month);
   const projection = dailyAverage * daysInMonth;
 
-  const isMarch2026 = year === 2026 && month === 2;
+  const isMarch2026View = year === 2026 && month === 2;
 
   const prevMonth = () => {
     if (month === 0) { setYear(year - 1); setMonth(11); }
