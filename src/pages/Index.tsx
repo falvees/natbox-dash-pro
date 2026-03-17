@@ -11,7 +11,6 @@ import { WeekdayChart } from "@/components/WeekdayChart";
 import { SalesHistory } from "@/components/SalesHistory";
 import { ImportSales } from "@/components/ImportSales";
 import { getSalesForMonth, upsertSale, deleteSale } from "@/lib/salesStore";
-import { getSalesForMonth, upsertSale, deleteSale } from "@/lib/salesStore";
 
 const MARCH_2026_SEED = [
   { date: "2026-03-02", cash: 6.98, card: 559.89, ifood: 408.86 },
