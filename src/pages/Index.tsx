@@ -10,7 +10,6 @@ import { ChannelChart } from "@/components/ChannelChart";
 import { WeekdayChart } from "@/components/WeekdayChart";
 import { SalesHistory } from "@/components/SalesHistory";
 import { ImportSales } from "@/components/ImportSales";
-import { MissingDayWarning } from "@/components/MissingDayWarning";
 import { getSalesForMonth, upsertSale, deleteSale } from "@/lib/salesStore";
 
 const MARCH_2026_SEED = [
@@ -25,6 +24,7 @@ const MARCH_2026_SEED = [
   { date: "2026-03-11", cash: 37.00, card: 968.83, ifood: 803.70 },
   { date: "2026-03-12", cash: 0, card: 1270.37, ifood: 735.20 },
   { date: "2026-03-13", cash: 47.00, card: 738.74, ifood: 565.13 },
+  { date: "2026-03-14", cash: 20.00, card: 579.39, ifood: 333.66 },
   { date: "2026-03-16", cash: 85.00, card: 1446.62, ifood: 879.59 },
 ];
 
@@ -40,7 +40,7 @@ export default function Index() {
 
   // Seed March 2026 data on first load
   useEffect(() => {
-    const SEED_KEY = "natbox-march2026-seeded";
+    const SEED_KEY = "natbox-march2026-seeded-v2";
     if (!localStorage.getItem(SEED_KEY)) {
       MARCH_2026_SEED.forEach((e) => upsertSale(e));
       localStorage.setItem(SEED_KEY, "1");
@@ -55,7 +55,7 @@ export default function Index() {
   const daysInMonth = getDaysInMonth(year, month);
   const projection = dailyAverage * daysInMonth;
 
-  const isMarch2026 = year === 2026 && month === 2;
+  const isMarch2026View = year === 2026 && month === 2;
 
   const prevMonth = () => {
     if (month === 0) { setYear(year - 1); setMonth(11); }
@@ -107,8 +107,6 @@ export default function Index() {
           </Button>
         </div>
 
-        {/* Warning for missing day */}
-        {isMarch2026 && <MissingDayWarning />}
 
         {/* KPIs */}
         <KPICards
