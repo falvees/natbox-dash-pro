@@ -40,7 +40,7 @@ export default function Index() {
 
   // Seed March 2026 data on first load
   useEffect(() => {
-    const SEED_KEY = "natbox-march2026-seeded";
+    const SEED_KEY = "natbox-march2026-seeded-v2";
     if (!localStorage.getItem(SEED_KEY)) {
       MARCH_2026_SEED.forEach((e) => upsertSale(e));
       localStorage.setItem(SEED_KEY, "1");
