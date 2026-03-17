@@ -16,11 +16,6 @@ export function RevenueChart({ sales }: RevenueChartProps) {
       ifood: s.ifood,
     };
   });
-    total: s.total,
-    cash: s.cash,
-    card: s.card,
-    ifood: s.ifood,
-  }));
 
   if (data.length === 0) {
     return (
