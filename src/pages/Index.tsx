@@ -25,6 +25,7 @@ const MARCH_2026_SEED = [
   { date: "2026-03-11", cash: 37.00, card: 968.83, ifood: 803.70 },
   { date: "2026-03-12", cash: 0, card: 1270.37, ifood: 735.20 },
   { date: "2026-03-13", cash: 47.00, card: 738.74, ifood: 565.13 },
+  { date: "2026-03-14", cash: 20.00, card: 579.39, ifood: 333.66 },
   { date: "2026-03-16", cash: 85.00, card: 1446.62, ifood: 879.59 },
 ];
 
