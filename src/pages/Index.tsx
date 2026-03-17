@@ -108,8 +108,6 @@ export default function Index() {
           </Button>
         </div>
 
-        {/* Warning for missing day */}
-        {isMarch2026 && <MissingDayWarning />}
 
         {/* KPIs */}
         <KPICards
