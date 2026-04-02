@@ -28,6 +28,12 @@ const MARCH_2026_SEED = [
   { date: "2026-03-16", cash: 85.00, card: 1446.62, ifood: 879.59 },
 ];
 
+function getWorkingDaysInMonth(year: number, month: number) {
+  const start = startOfMonth(new Date(year, month));
+  const end = endOfMonth(new Date(year, month));
+  return eachDayOfInterval({ start, end }).filter((d) => getDay(d) !== 0).length;
+}
+
 
 export default function Index() {
   const [year, setYear] = useState(2026);
