@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from "react";
-import { format, getDaysInMonth as dateFnsGetDaysInMonth } from "date-fns";
+import { format, getDaysInMonth } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { ChevronLeft, ChevronRight, Leaf } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -49,7 +49,7 @@ export default function Index() {
   const totalRevenue = sales.reduce((s, e) => s + e.total, 0);
   const salesDays = sales.length;
   const dailyAverage = salesDays > 0 ? totalRevenue / salesDays : 0;
-  const daysInMonth = dateFnsGetDaysInMonth(new Date(year, month));
+  const daysInMonth = getDaysInMonth(new Date(year, month));
   const projection = dailyAverage * daysInMonth;
 
   const isMarch2026View = year === 2026 && month === 2;
