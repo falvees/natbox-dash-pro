@@ -28,9 +28,6 @@ const MARCH_2026_SEED = [
   { date: "2026-03-16", cash: 85.00, card: 1446.62, ifood: 879.59 },
 ];
 
-function getDaysInMonth(year: number, month: number) {
-  return new Date(year, month + 1, 0).getDate();
-}
 
 export default function Index() {
   const [year, setYear] = useState(2026);
