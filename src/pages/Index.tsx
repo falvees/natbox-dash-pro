@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from "react";
-import { format, getDaysInMonth } from "date-fns";
+import { format, getDaysInMonth, startOfMonth, endOfMonth, eachDayOfInterval, getDay } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { ChevronLeft, ChevronRight, Leaf } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -28,6 +28,12 @@ const MARCH_2026_SEED = [
   { date: "2026-03-16", cash: 85.00, card: 1446.62, ifood: 879.59 },
 ];
 
+function getWorkingDaysInMonth(year: number, month: number) {
+  const start = startOfMonth(new Date(year, month));
+  const end = endOfMonth(new Date(year, month));
+  return eachDayOfInterval({ start, end }).filter((d) => getDay(d) !== 0).length;
+}
+
 
 export default function Index() {
   const [year, setYear] = useState(2026);
@@ -49,7 +55,7 @@ export default function Index() {
   const totalRevenue = sales.reduce((s, e) => s + e.total, 0);
   const salesDays = sales.length;
   const dailyAverage = salesDays > 0 ? totalRevenue / salesDays : 0;
-  const daysInMonth = getDaysInMonth(new Date(year, month));
+  const daysInMonth = getWorkingDaysInMonth(year, month);
   const projection = dailyAverage * daysInMonth;
 
   const isMarch2026View = year === 2026 && month === 2;
