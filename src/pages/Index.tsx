@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from "react";
-import { format, getDaysInMonth as dateFnsGetDaysInMonth } from "date-fns";
+import { format, getDaysInMonth } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { ChevronLeft, ChevronRight, Leaf } from "lucide-react";
 import { Button } from "@/components/ui/button";
