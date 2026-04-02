@@ -49,7 +49,7 @@ export default function Index() {
   const totalRevenue = sales.reduce((s, e) => s + e.total, 0);
   const salesDays = sales.length;
   const dailyAverage = salesDays > 0 ? totalRevenue / salesDays : 0;
-  const daysInMonth = dateFnsGetDaysInMonth(new Date(year, month));
+  const daysInMonth = getDaysInMonth(new Date(year, month));
   const projection = dailyAverage * daysInMonth;
 
   const isMarch2026View = year === 2026 && month === 2;
