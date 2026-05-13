@@ -36,8 +36,9 @@ function getWorkingDaysInMonth(year: number, month: number) {
 
 
 export default function Index() {
-  const [year, setYear] = useState(2026);
-  const [month, setMonth] = useState(2); // March
+  const today = new Date();
+  const [year, setYear] = useState(today.getFullYear());
+  const [month, setMonth] = useState(today.getMonth());
   const [, setTick] = useState(0);
   const refresh = useCallback(() => setTick((t) => t + 1), []);
 
@@ -119,6 +120,9 @@ export default function Index() {
           salesDays={salesDays}
         />
 
+        {/* Import Section */}
+        <ImportSales onImport={refresh} />
+
         {/* Charts */}
         <RevenueChart sales={sales} />
 
@@ -126,9 +130,6 @@ export default function Index() {
           <ChannelChart sales={sales} />
           <WeekdayChart sales={sales} />
         </div>
-
-        {/* Import Section */}
-        <ImportSales onImport={refresh} />
 
         {/* History */}
         <SalesHistory sales={sales} onEdit={handleAdd} onDelete={handleDelete} />
