@@ -1,1 +1,4 @@
 project_id = "cphjfnvufggekhiizquz"
+
+[functions.sync-notion-sales]
+verify_jwt = false

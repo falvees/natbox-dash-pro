@@ -1,5 +1,5 @@
-import { useState, useCallback, useEffect } from "react";
-import { format, getDaysInMonth, startOfMonth, endOfMonth, eachDayOfInterval, getDay } from "date-fns";
+import { useState, useCallback } from "react";
+import { format, startOfMonth, endOfMonth, eachDayOfInterval, getDay } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { ChevronLeft, ChevronRight, Leaf } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -9,31 +9,14 @@ import { RevenueChart } from "@/components/RevenueChart";
 import { ChannelChart } from "@/components/ChannelChart";
 import { WeekdayChart } from "@/components/WeekdayChart";
 import { SalesHistory } from "@/components/SalesHistory";
-import { ImportSales } from "@/components/ImportSales";
+import { NotionSync } from "@/components/NotionSync";
 import { getSalesForMonth, upsertSale, deleteSale } from "@/lib/salesStore";
-
-const MARCH_2026_SEED = [
-  { date: "2026-03-02", cash: 6.98, card: 559.89, ifood: 408.86 },
-  { date: "2026-03-03", cash: 0, card: 1019.73, ifood: 1117.64 },
-  { date: "2026-03-04", cash: 49.70, card: 1199.25, ifood: 275.79 },
-  { date: "2026-03-05", cash: 0, card: 636.37, ifood: 1063.03 },
-  { date: "2026-03-06", cash: 135.00, card: 923.85, ifood: 197.77 },
-  { date: "2026-03-07", cash: 0, card: 436.95, ifood: 188.03 },
-  { date: "2026-03-09", cash: 4.00, card: 1733.63, ifood: 413.75 },
-  { date: "2026-03-10", cash: 21.00, card: 1267.30, ifood: 914.47 },
-  { date: "2026-03-11", cash: 37.00, card: 968.83, ifood: 803.70 },
-  { date: "2026-03-12", cash: 0, card: 1270.37, ifood: 735.20 },
-  { date: "2026-03-13", cash: 47.00, card: 738.74, ifood: 565.13 },
-  { date: "2026-03-14", cash: 20.00, card: 579.39, ifood: 333.66 },
-  { date: "2026-03-16", cash: 85.00, card: 1446.62, ifood: 879.59 },
-];
 
 function getWorkingDaysInMonth(year: number, month: number) {
   const start = startOfMonth(new Date(year, month));
   const end = endOfMonth(new Date(year, month));
   return eachDayOfInterval({ start, end }).filter((d) => getDay(d) !== 0).length;
 }
-
 
 export default function Index() {
   const today = new Date();
@@ -42,24 +25,12 @@ export default function Index() {
   const [, setTick] = useState(0);
   const refresh = useCallback(() => setTick((t) => t + 1), []);
 
-  // Seed March 2026 data on first load
-  useEffect(() => {
-    const SEED_KEY = "natbox-march2026-seeded-v2";
-    if (!localStorage.getItem(SEED_KEY)) {
-      MARCH_2026_SEED.forEach((e) => upsertSale(e));
-      localStorage.setItem(SEED_KEY, "1");
-      refresh();
-    }
-  }, [refresh]);
-
   const sales = getSalesForMonth(year, month);
   const totalRevenue = sales.reduce((s, e) => s + e.total, 0);
   const salesDays = sales.length;
   const dailyAverage = salesDays > 0 ? totalRevenue / salesDays : 0;
   const daysInMonth = getWorkingDaysInMonth(year, month);
   const projection = dailyAverage * daysInMonth;
-
-  const isMarch2026View = year === 2026 && month === 2;
 
   const prevMonth = () => {
     if (month === 0) { setYear(year - 1); setMonth(11); }
@@ -120,8 +91,8 @@ export default function Index() {
           salesDays={salesDays}
         />
 
-        {/* Import Section */}
-        <ImportSales onImport={refresh} />
+        {/* Notion Sync */}
+        <NotionSync onSync={refresh} />
 
         {/* Charts */}
         <RevenueChart sales={sales} />
