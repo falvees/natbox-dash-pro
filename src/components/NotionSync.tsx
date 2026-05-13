@@ -16,6 +16,7 @@ export function NotionSync({ onSync }: NotionSyncProps) {
   );
   const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
+  const autoSyncedRef = useRef(false);
 
   const handleSync = async () => {
     setLoading(true);
