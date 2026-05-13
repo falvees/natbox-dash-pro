@@ -69,7 +69,7 @@ export function NotionSync({ onSync }: NotionSyncProps) {
             <Database className="w-4 h-4 text-primary" />
             <h3 className="font-display font-bold text-base text-foreground">Integração Notion</h3>
           </div>
-          <Button onClick={handleSync} disabled={loading} className="gap-2">
+          <Button onClick={() => handleSync(false)} disabled={loading} className="gap-2">
             <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
             {loading ? "Sincronizando..." : "Sincronizar com Notion"}
           </Button>
