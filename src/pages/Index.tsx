@@ -42,16 +42,6 @@ export default function Index() {
   const [, setTick] = useState(0);
   const refresh = useCallback(() => setTick((t) => t + 1), []);
 
-  // Seed March 2026 data on first load
-  useEffect(() => {
-    const SEED_KEY = "natbox-march2026-seeded-v2";
-    if (!localStorage.getItem(SEED_KEY)) {
-      MARCH_2026_SEED.forEach((e) => upsertSale(e));
-      localStorage.setItem(SEED_KEY, "1");
-      refresh();
-    }
-  }, [refresh]);
-
   const sales = getSalesForMonth(year, month);
   const totalRevenue = sales.reduce((s, e) => s + e.total, 0);
   const salesDays = sales.length;
@@ -120,8 +110,8 @@ export default function Index() {
           salesDays={salesDays}
         />
 
-        {/* Import Section */}
-        <ImportSales onImport={refresh} />
+        {/* Notion Sync */}
+        <NotionSync onSync={refresh} />
 
         {/* Charts */}
         <RevenueChart sales={sales} />
