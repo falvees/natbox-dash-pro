@@ -18,7 +18,7 @@ export function NotionSync({ onSync }: NotionSyncProps) {
   const { toast } = useToast();
   const autoSyncedRef = useRef(false);
 
-  const handleSync = async () => {
+  const handleSync = async (silent = false) => {
     setLoading(true);
     setError(null);
     try {
@@ -43,11 +43,18 @@ export function NotionSync({ onSync }: NotionSyncProps) {
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Erro desconhecido";
       setError(msg);
-      toast({ title: "Falha ao sincronizar", description: msg, variant: "destructive" });
+      if (!silent) toast({ title: "Falha ao sincronizar", description: msg, variant: "destructive" });
     } finally {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (autoSyncedRef.current) return;
+    autoSyncedRef.current = true;
+    handleSync(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const formatLastSync = (iso: string) => {
     const d = new Date(iso);
