@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Database, RefreshCw, CheckCircle2, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
@@ -16,8 +16,9 @@ export function NotionSync({ onSync }: NotionSyncProps) {
   );
   const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
+  const autoSyncedRef = useRef(false);
 
-  const handleSync = async () => {
+  const handleSync = async (silent = false) => {
     setLoading(true);
     setError(null);
     try {
@@ -42,11 +43,18 @@ export function NotionSync({ onSync }: NotionSyncProps) {
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Erro desconhecido";
       setError(msg);
-      toast({ title: "Falha ao sincronizar", description: msg, variant: "destructive" });
+      if (!silent) toast({ title: "Falha ao sincronizar", description: msg, variant: "destructive" });
     } finally {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (autoSyncedRef.current) return;
+    autoSyncedRef.current = true;
+    handleSync(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const formatLastSync = (iso: string) => {
     const d = new Date(iso);
@@ -61,7 +69,7 @@ export function NotionSync({ onSync }: NotionSyncProps) {
             <Database className="w-4 h-4 text-primary" />
             <h3 className="font-display font-bold text-base text-foreground">Integração Notion</h3>
           </div>
-          <Button onClick={handleSync} disabled={loading} className="gap-2">
+          <Button onClick={() => handleSync(false)} disabled={loading} className="gap-2">
             <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
             {loading ? "Sincronizando..." : "Sincronizar com Notion"}
           </Button>
